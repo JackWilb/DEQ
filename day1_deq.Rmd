@@ -1,0 +1,114 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# Day 1
+
+## Rstudio tour
+
+Things to mention:
+  Each pane:
+    Notebook/script pane
+    Console/terminal
+    Env/history/connections/git
+    Files/plots/packages/help
+
+## Assigning, manipulating, re-assigning
+
+``` {r}
+x = 1
+x
+x = 10
+x
+x * 2
+x
+x = x * 2
+x
+x = x / 2
+x
+x = "x"
+x
+x = "x" + 2 # Errors
+x = "x" + "2" # Errors, works in python/js
+
+a = 1
+b = 2
+c = 3
+
+a + b + c
+
+a + b / c
+(a + b) / c
+d = (a + b) / c
+
+x
+```
+
+
+## Logical operators
+
+``` {r}
+1 == 1
+1 == 0
+1 != 0
+NA == NA
+NA == FALSE
+NA == TRUE
+NA == 0
+NA == 1
+is.na(NA)
+1 == 1
+!(1 == 1)
+
+1 < 2
+2 < 1
+2 > 1
+1 > 2
+
+1 <= 2
+2 >= 1
+
+TRUE == !FALSE
+!TRUE == FALSE
+!TRUE == !FALSE
+
+(1 == 1) && (2 == 2)
+(1 == 2) && (2 == 2)
+(1 == 1) && (2 == 1)
+(1 == 2) && (2 == 1)
+
+(1 == 1) || (2 == 2)
+(1 == 2) || (2 == 2)
+(1 == 1) || (2 == 1)
+(1 == 2) || (2 == 1)
+
+NA && is.na(NA)
+NA || is.na(NA)
+
+is.numeric(1)
+is.numeric("hello")
+
+is.character()
+```
+
+
+## Imports
+
+``` {r}
+library(stats)
+library(h2o)
+
+# Can also invoke package loading from the packages pane
+```
+
+
+## Methods
+
+``` {r}
+mean(c(1, 2, 3, 4))
+
+base::mean(c(1, 2, 3, 4)) # Explain function function masking and that this alleviates, also means you don't have to load a whole library for one function
+
+
+```

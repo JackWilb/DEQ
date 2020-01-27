@@ -17,32 +17,74 @@ Things to mention:
 ## Assigning, manipulating, re-assigning
 
 ``` {r}
-x = 1
+# Canonical first thing you do with a new language
+print("Hello World!")
+
+x <- 1
 x
-x = 10
+X
+x <- 10
 x
 x * 2
 x
-x = x * 2
+x <- x * 2
 x
-x = x / 2
+x <- x / 2
 x
-x = "x"
+x <- "x"
 x
-x = "x" + 2 # Errors
-x = "x" + "2" # Errors, works in python/js
+x <- "x" + 2 # Errors
+x <- "x" + "2" # Errors, works in python/js
 
-a = 1
-b = 2
-c = 3
+a <- 1
+b <- 2
+c <- 3
 
 a + b + c
 
 a + b / c
 (a + b) / c
-d = (a + b) / c
+d <- (a + b) / c
+
+x # is unchanged
+
+# Vectors
+c(1,2,3)
+test_vector <- c(TRUE, FALSE, NA)
+test_vector[2]
+test_vector[[2]]
+
+# Lists
+test_list <- list(1, 2,"hello", TRUE)
+test_list[3]
+test_list[[3]]
+
+# Vector of factors
+x <- factor(c("yes", "yes", "no", "yes", "no")) 
+x
+
+table(x)
+
+unclass(x)
+
+x <- factor(c("yes", "yes", "no", "yes", "no"),
+             levels = c("yes", "no"))
 
 x
+
+unclass(x)
+
+
+# Data frames
+df <- data.frame(var1 = 1:4, var2 = c(T, T, F, F)) 
+df
+nrow(df)
+ncol(df)
+
+names(df)
+names(df) <- c("id", "likes_ice_cream")
+names(df)
+df
 ```
 
 
@@ -89,7 +131,14 @@ NA || is.na(NA)
 is.numeric(1)
 is.numeric("hello")
 
-is.character()
+is.character("hello")
+is.character(NA)
+
+# Obscure operators
+21 %% 3
+22 %% 3
+21 %/% 3
+22 %/% 3
 ```
 
 
@@ -100,6 +149,9 @@ library(stats)
 library(h2o)
 
 # Can also invoke package loading from the packages pane
+
+# Can import functions in one line
+dplyr::filter()
 ```
 
 
@@ -110,5 +162,133 @@ mean(c(1, 2, 3, 4))
 
 base::mean(c(1, 2, 3, 4)) # Explain function function masking and that this alleviates, also means you don't have to load a whole library for one function
 
+filter() #vs.
+dplyr::filter()
+```
+
+
+## Statements
+
+``` {r}
+if (TRUE) {
+  print("This worked!")
+} else {
+  print("Looks like it was false")
+}
+
+if (FALSE) {
+  print("This worked!")
+} else {
+  print("Looks like it was false")
+}
+
+if (1 == 1) {
+  print("This worked!")
+} else {
+  print("Looks like it was false")
+}
+
+if (2 != 2) {
+  print("This worked!")
+} else {
+  print("Looks like it was false")
+}
+
+if (NA) {
+  print("This worked!")
+} else {
+  print("Looks like it was false")
+} # Breaks
+
+ifelse(TRUE, 1, 0)
+ifelse(FALSE, 1, 0)
+
+
+numbers <- c(1 ,2 ,3)
+
+for (num in numbers) {
+  expression <- paste("num now equals", num)
+  print(expression)
+}
+
+for (i in 1:3) {
+  expression <- paste("num now equals", num)
+  print(expression)
+} # Breaks
+
+for (i in 1:3) {
+  expression <- paste("num now equals", numbers[i])
+  print(expression)
+}
+
+# Nested fors
+for (i in 1:3) {
+  for (j in 1:3) {
+    expression <- paste("i, j <- ", i , j)
+    print(expression)
+  }
+}
+
+# Vectorizing
+print(numbers + 1)
+```
+
+## Syntax
+
+``` {r}
+# Numbers are always without quotes
+1
+2
+3
+
+# Strings are always in quotes
+"hello"
+"this is a string"
+""
+
+if 1==1
+  print("It worked!")
+  
+""hello"
+
+("hello"))
+(("hello")
+"hello"
+
+{"hello"}
+("hello")
+
+# Vectors must be instantiated with c(...)
+c(1,2,3)
+c("hi", "hello", "I'm third")
+1:50
+c(1:50)
+
+# Vectors of different types cause coercion
+c(1, TRUE, "TRUE") # coerces all to string
+c(1, 0, TRUE) # coerces to numeric
+c(TRUE, FALSE, 1, 0) # coerces to numeric
+as.logical(c(TRUE, FALSE, 1, 0)) # force coercion to logical
 
 ```
+
+## Edge cases and errors
+
+```{r}
+Inf
+1/0
+-1/0
+0/0
+
+NaN == NA
+is.na(NaN)
+is.nan(NaN)
+is.nan(NA)
+
+NULL
+is.na(NULL)
+
+# Dates and times
+```
+
+# Subsetting

@@ -13,6 +13,8 @@ Things to mention:
     Console/terminal
     Env/history/connections/git
     Files/plots/packages/help
+  
+  Getting help (from command line or from pane)
 
 ## Assigning, manipulating, re-assigning
 
@@ -279,6 +281,10 @@ Inf
 1/0
 -1/0
 0/0
+is.nan(Inf)
+is.nan(-Inf)
+is.na(Inf)
+is.na(-Inf)
 
 NaN == NA
 is.na(NaN)
@@ -291,4 +297,28 @@ is.na(NULL)
 # Dates and times
 ```
 
-# Subsetting
+## Subsetting
+
+``` {r}
+
+```
+
+
+
+## Importing data
+
+``` {r}
+read. # Check out all the available options
+
+read.csv()
+read.csv2()
+```
+
+
+## Running functions on data, reassigning, bringing it all together
+
+``` {r}
+
+```
+
+

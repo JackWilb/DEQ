@@ -81,7 +81,160 @@ variable2 <- ncvar_def("area2", "m^2", list(dimension), prec="single")
 example <- nc_open("datasets/example.nc", write = TRUE)
 ncvar_add(example, variable2)
 nc_close(example) # Check file size again
+
+# You can do something similar with the put command to update a variable instead of just creating it
 ```
+
+
+## Data visualization
+
+
+```{r}
+library(ggplot2)
+
+diamonds
+
+# Histograms/KDE (1 numeric)
+ggplot(diamonds, aes(price)) +
+  geom_histogram(binwidth = 2000) 
+
+ggplot(diamonds, aes(price)) +
+  geom_histogram(binwidth = 2000, color = "#99ff66") 
+
+ggplot(diamonds, aes(price)) +
+  geom_histogram(binwidth = 2000, fill = "#99ff66")
+
+ggplot(diamonds, aes(price)) +
+  geom_density(binwidth = 2000, fill = "#99ff66") + 
+  scale_x_continuous(labels = scales::dollar_format())
+
+options(scipen = 1000000)
+
+ggplot(diamonds, aes(price)) +
+  geom_density(binwidth = 2000, fill = "#99ff66") + 
+  scale_x_continuous(labels = scales::dollar_format())
+
+
+# Bar charts (1 categorical)
+ggplot(diamonds, aes(cut)) +
+  geom_bar()
+
+diamonds$cut <- factor(diamonds$cut, levels = c("Ideal", "Premium", "Very Good", "Good", "Fair"))
+
+ggplot(diamonds, aes(cut)) +
+  geom_bar()
+
+diamonds$cut <- factor(diamonds$cut, levels = c("Very Good", "Ideal", "Fair", "Premium",  "Good"))
+
+ggplot(diamonds, aes(cut)) +
+  geom_bar()
+
+sort(table(diamonds$cut))
+sort(table(diamonds$cut), decreasing = TRUE)
+names(sort(table(diamonds$cut), decreasing = TRUE))
+
+diamonds <- within(
+  diamonds, 
+  cut <- factor(
+    cut, 
+    levels = names(sort(table(cut), decreasing = TRUE))
+    )
+)
+
+ggplot(diamonds, aes(cut)) +
+  geom_bar()
+
+
+# Facetted histograms and side by side boxplot (1 numeric, 1 categorical)
+ggplot(diamonds, aes(price)) +
+  geom_histogram(binwidth = 2000) + 
+  facet_wrap( ~ cut)
+
+ggplot(diamonds, aes(price)) +
+  geom_histogram(binwidth = 2000) + 
+  facet_wrap( ~ cut, ncol = 1)
+
+ggplot(diamonds, aes(price, fill = cut)) +
+  geom_histogram(binwidth = 2000)
+
+ggplot(diamonds, aes(cut, price)) +
+  geom_boxplot()
+
+ggplot(diamonds, aes(cut, price)) +
+  geom_boxplot() + 
+  coord_flip()
+
+# Scatter plots (2 numeric, a couple categorical)
+ggplot(diamonds, aes(carat, price)) +
+  geom_point() 
+
+ggplot(diamonds, aes(carat, price)) +
+  geom_point() +
+  geom_smooth(method = lm)
+
+ggplot(diamonds, aes(carat, price)) +
+  geom_point() +
+  geom_smooth(method = lm) +
+  scale_x_log10()
+
+ggplot(diamonds, aes(carat, price)) +
+  geom_point() +
+  geom_smooth(method = lm) +
+  scale_y_log10()
+
+ggplot(diamonds, aes(carat, price)) +
+  geom_point() +
+  geom_smooth(method = lm) +
+  scale_x_log10() +
+  scale_y_log10()
+
+ggplot(diamonds, aes(log10(carat), log10(price))) +
+  geom_point() +
+  geom_smooth(method = lm)
+
+ggplot(diamonds, aes(log10(carat), log10(price))) +
+  geom_point(fill = color) # breaks
+
+ggplot(diamonds, aes(log10(carat), log10(price))) +
+  geom_point(aes(color = cut))
+
+ggplot(diamonds, aes(log10(carat), log10(price), color = cut)) +
+  geom_point()
+
+# Side by side bar charts (2 categorical)
+ggplot(diamonds, aes(x = cut, fill = color)) + 
+  geom_bar()
+
+ggplot(diamonds, aes(x = cut, fill = color)) + 
+  geom_bar(position = "dodge")
+
+ggplot(diamonds, aes(x = cut, y = ..count.., fill = color)) + 
+  geom_bar(position = "dodge")
+
+ggplot(diamonds, aes(x = cut, y = ..count../sum(..count..), fill = color)) + 
+  geom_bar(position = "dodge") + 
+  scale_y_continuous(labels = scales::percent_format())
+
+ggplot(diamonds, aes(x = cut)) + 
+  geom_bar(aes(y = ..prop.., group = 1), position = "dodge") + 
+  scale_y_continuous(labels = scales::percent_format()) + 
+  facet_wrap( ~ color)
+
+diamonds <- count(answer, gender) %>% 
+mutate(freq = n/if_else(gender == 'Male', male.total, female.total))
+
+
+# Theme-ing the plots
+
+
+# Fully complete examples
+
+```
+
+
+
+
+
 
 
 

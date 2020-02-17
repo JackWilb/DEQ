@@ -13,17 +13,41 @@ output: html_document
 
 ``` {r}
 # csv
-read.csv()
-read.csv2() # deals with semicolon delimiters
+iris <- read.csv("datasets/iris.csv")
+iris2 <- read.csv2("datasets/iris.csv") # deals with semicolon delimiters
 
-librar(readr) # The preferred package for importing common datatypes
-read_csv()
+install.packages("tidyverse") # or just readr
+library(readr) # The preferred package for importing common datatypes (csv, text, log, table, RDS, etc.)
+iris3 <- read_csv("datasets/iris.csv")
+iris4 <- read_csv("datasets/iris.csv", col_types = "ccccf") # show them and ask them what this means, gentle push to help files
+# Can also be achieved after the fact but it might cause data loss (if it assumes a logical and it's character for example)
+
+iris5 <- read_csv("datasets/iris.csv", skip=110)
+iris6 <- read_csv("datasets/iris.csv", n_max = 10)
+
+iris7<- read_csv("datasets/iris.csv", progress = TRUE) # Why didn't this work? Have them read the documentation
 
 # netCDF
+install.packages("ncdf4")
+library(ncdf4)
+nc <- nc_open("datasets/ncdfexample.nc")
+print(nc)
+attributes(nc)
+attributes(nc$var)
+attributes(nc$var)$names
+ncvar_get(nc, attributes(nc$var)$names[1])
 
+nc_lat <- ncvar_get(nc, "lat_bnds")[1, ]
+nc_lon <- ncvar_get(nc, "lon_bnds")[1, ]
+area <- ncvar_get(nc, "area")
 
+dim(area)
+
+dimnames(area) <- list(nc_lon, nc_lat)
+View(area[1:10, 1:10])
 
 # xlsx
+install.packages("readxl")
 library(readxl)
 
 df <- read_excel()
@@ -34,7 +58,7 @@ df <- read_excel(df, sheet = "chickwts")
 
 
 # txt files
-# There are ways, we can discuss next time if people need it
+news <- read_lines("datasets/news.txt") # has similar options to read_csv since it's pretty much doing the same thing
 
 # DATABASES (SQL over to the right) (do they have drivers?)
 library(odbc)
@@ -43,11 +67,20 @@ con <- odbc::dbConnect(drv = odbc::odbc(), driver = "ODBC Driver 17 for SQL Serv
     database = "R4W_003")
 
 # Exporting data
-write_csv()
+write_csv(iris5, "datasets/iris_short.csv")
 write_ # explore options
 # Each package to handle data comes with imports and exports (so depends on file type, etc)
 
 # write xlsx as csv unless it's not possible, then use the package xlsx
+dimension <- ncdim_def("area_dim", "m^2", as.double(area))
+nc_create("datasets/example.nc", dimension)
+variable <- ncvar_def("area", "m^2", list(dimension), prec="single")
+nc_create("datasets/example.nc", variable) # Check file size
+
+variable2 <- ncvar_def("area2", "m^2", list(dimension), prec="single")
+example <- nc_open("datasets/example.nc", write = TRUE)
+ncvar_add(example, variable2)
+nc_close(example) # Check file size again
 ```
 
 

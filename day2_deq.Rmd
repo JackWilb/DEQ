@@ -1,0 +1,56 @@
+---
+title: "day2_deq"
+author: "Jack Wilburn"
+date: "2/16/2020"
+output: html_document
+---
+
+# Day two
+
+## Importing and writing data
+
+## Importing data
+
+``` {r}
+# csv
+read.csv()
+read.csv2() # deals with semicolon delimiters
+
+librar(readr) # The preferred package for importing common datatypes
+read_csv()
+
+# netCDF
+
+
+
+# xlsx
+library(readxl)
+
+df <- read_excel()
+df <- readxl_example("datasets.xls")
+excel_sheets(df)
+df <- read_excel(df, sheet = "chickwts")
+# Can't re-run just the sheet command, has to be the whole thing again 
+
+
+# txt files
+# There are ways, we can discuss next time if people need it
+
+# DATABASES (SQL over to the right) (do they have drivers?)
+library(odbc)
+con <- odbc::dbConnect(drv = odbc::odbc(), driver = "ODBC Driver 17 for SQL Server", 
+    server = "x.x.x.x", uid = "me", pwd = "123", 
+    database = "R4W_003")
+
+# Exporting data
+write_csv()
+write_ # explore options
+# Each package to handle data comes with imports and exports (so depends on file type, etc)
+
+# write xlsx as csv unless it's not possible, then use the package xlsx
+```
+
+
+
+
+

@@ -5,6 +5,13 @@ output: html_notebook
 
 # Day 1
 
+
+##### Important packages
+``` {r}
+install.packages(c("car", "tidyverse", "mosaic", "openintro", "MASS"))
+```
+
+
 ## Rstudio tour
 
 Things to mention:
@@ -15,6 +22,9 @@ Things to mention:
     Files/plots/packages/help
   
   Getting help (from command line or from pane)
+  
+  Projects (Organizing code)
+    Make a project at this point
 
 ## Assigning, manipulating, re-assigning
 
@@ -53,6 +63,7 @@ x # is unchanged
 # Vectors
 c(1,2,3)
 test_vector <- c(TRUE, FALSE, NA)
+test_vector[0]
 test_vector[2]
 test_vector[[2]]
 
@@ -87,6 +98,14 @@ names(df)
 names(df) <- c("id", "likes_ice_cream")
 names(df)
 df
+
+df[1]
+df[1, ]
+df[, 2]
+df$likes_ice_cream
+df$id
+
+df[[1]]
 ```
 
 
@@ -150,10 +169,21 @@ is.character(NA)
 library(stats)
 library(h2o)
 
+Melanoma
+
+library(MASS)
+
+Melanoma
+
 # Can also invoke package loading from the packages pane
 
 # Can import functions in one line
 dplyr::filter()
+
+# Now's a good time to talk about finding help
+# The help pane
+?letters
+??letters
 ```
 
 
@@ -285,6 +315,10 @@ is.nan(Inf)
 is.nan(-Inf)
 is.na(Inf)
 is.na(-Inf)
+Inf == Inf
+Inf * Inf
+Inf + -Inf
+Inf * -Inf
 
 NaN == NA
 is.na(NaN)
@@ -300,25 +334,28 @@ is.na(NULL)
 ## Subsetting
 
 ``` {r}
-
+c(1,2,3,4,5)[c(1,2,3)]
+c(1,2,3,4,5)[c(3,2,1)]
+c(1,2,3,4,5)[c(2,3,1)]
+c(1,2,3,4,5)[6]
 ```
 
-
-
-## Importing data
+## Intro to R and to Rmarkdown
 
 ``` {r}
-read. # Check out all the available options
+Melanoma
+View(Melanoma)
+head(Melanoma)
+head(Melanoma, n = 10)
+tail(Melanoma)
+str(Melanoma)
+nrow(Melanoma)
+ncol(Melanoma)
+summary(Melanoma)
 
-read.csv()
-read.csv2()
+# Accessing
+Melanoma$age
+head(Melanoma$age)
+summary(Melanoma$age)
 ```
-
-
-## Running functions on data, reassigning, bringing it all together
-
-``` {r}
-
-```
-
 

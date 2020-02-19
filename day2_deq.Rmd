@@ -138,7 +138,7 @@ diamonds <- within(
   cut <- factor(
     cut, 
     levels = names(sort(table(cut), decreasing = TRUE))
-    )
+  )
 )
 
 ggplot(diamonds, aes(cut)) +
@@ -157,10 +157,18 @@ ggplot(diamonds, aes(price)) +
 ggplot(diamonds, aes(price, fill = cut)) +
   geom_histogram(binwidth = 2000)
 
+ggplot(diamonds, aes(price, fill = cut)) +
+  geom_histogram(binwidth = 2000) + 
+  facet_wrap( ~ cut, ncol = 1)
+
 ggplot(diamonds, aes(cut, price)) +
   geom_boxplot()
 
 ggplot(diamonds, aes(cut, price)) +
+  geom_boxplot() + 
+  coord_flip()
+
+ggplot(diamonds, aes(cut, price, fill = cut)) +
   geom_boxplot() + 
   coord_flip()
 
@@ -193,7 +201,7 @@ ggplot(diamonds, aes(log10(carat), log10(price))) +
   geom_smooth(method = lm)
 
 ggplot(diamonds, aes(log10(carat), log10(price))) +
-  geom_point(fill = color) # breaks
+  geom_point(fill = cut) # breaks
 
 ggplot(diamonds, aes(log10(carat), log10(price))) +
   geom_point(aes(color = cut))
@@ -225,9 +233,142 @@ mutate(freq = n/if_else(gender == 'Male', male.total, female.total))
 
 
 # Theme-ing the plots
+ggplot(diamonds, aes(x = cut, fill = color)) + 
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Diamond Count By Cut And By Color",
+    x = "Cut",
+    y = "Count",
+    fill = "Diamond color"
+  )
 
+ggplot(diamonds, aes(x = cut, fill = color)) + 
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Diamond Count By Cut And By Color",
+    x = "Cut",
+    y = "Count",
+    fill = "Diamond\ncolor"
+  )
+
+?theme
+
+ggplot(diamonds, aes(x = cut, fill = color)) + 
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Diamond Count By Cut And By Color",
+    x = "Cut",
+    y = "Count",
+    fill = "Diamond\ncolor"
+  ) +
+  theme_minimal()
+
+ggplot(diamonds, aes(x = cut, fill = color)) + 
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Diamond Count By Cut And By Color",
+    x = "Cut",
+    y = "Count",
+    fill = "Diamond\ncolor"
+  ) +
+  theme(
+    plot.title = element_text(size = 24)
+  )
+
+ggplot(diamonds, aes(x = cut, fill = color)) + 
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Diamond Count By Cut And By Color",
+    x = "Cut",
+    y = "Count",
+    fill = "Diamond\ncolor"
+  ) +
+  theme(
+    plot.title = element_text(size = 18),
+    axis.title.y = element_blank(),
+    axis.ticks = element_blank(),
+    axis.line = element_blank(),
+    panel.background = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_line(color = "#AAAAAA")
+  )
+
+ggplot(diamonds, aes(cut)) +
+  geom_bar(fill = "#0080b7", color = "white") +
+  geom_text(size = 6, stat = 'count', aes(label = scales::percent(..count../nrow(diamonds), accuracy = 0.1), vjust = -0.5))
 
 # Fully complete examples
+custom_theme <- theme(
+    plot.title = element_text(size = 18),
+    axis.ticks = element_blank(),
+    axis.line = element_blank(),
+    panel.background = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_line(color = "#AAAAAA")
+  )
+
+ggplot(diamonds, aes(price)) +
+  geom_density(binwidth = 2000, fill = "#0080b7", color = "white") + 
+  scale_x_continuous(labels = scales::dollar_format()) +
+  labs(
+    title = "Diamond Price",
+    x = "Price",
+    y = "Density"
+  ) + 
+  custom_theme
+
+ggplot(diamonds, aes(cut)) +
+  geom_bar(fill = "#0080b7", color = "white") +
+  labs(
+    title = "Diamond Quality",
+    x = "Quality",
+    y = "Count"
+  ) + 
+  custom_theme + 
+  geom_text(size = 4, stat = 'count', aes(label = scales::percent(..count../nrow(diamonds), accuracy = 0.1), vjust = -0.1))
+
+ggplot(diamonds, aes(price, fill = cut)) +
+  geom_histogram(binwidth = 2000) + 
+  facet_wrap( ~ cut, ncol = 1) +
+  labs(
+    title = "Diamond Price by Cut Type",
+    x = "Price",
+    y = "Count"
+  ) + 
+  custom_theme
+
+ggplot(diamonds, aes(cut, price, fill = cut)) +
+  geom_boxplot() + 
+  coord_flip() +
+  labs(
+    title = "Diamond Quality",
+    x = "Cut",
+    y = "Price"
+  ) + 
+  custom_theme
+
+``ggplot(diamonds, aes(log10(carat), log10(price))) +
+  geom_point(aes(color = cut)) + 
+  labs(
+    title = "Diamond Price vs. Size",
+    x = "Log diamond size (carats)",
+    y = "Log diamond price"
+  ) + 
+  custom_theme + 
+  theme(panel.grid.major = element_line(color = "#AAAAAA"))
+
+
+
+
+
+
+
+# Pie Chart
+ggplot(diamonds,aes(x = "", fill=clarity)) + geom_bar(width =1) + coord_polar (theta="y")
+
+# Coxcomb Chart
+ggplot(diamonds,aes(x = clarity, fill=clarity)) + geom_bar(width =1) + coord_polar (theta="x")
+
 
 ```
 
@@ -237,6 +378,11 @@ mutate(freq = n/if_else(gender == 'Male', male.total, female.total))
 
 
 
+```{python}
+x = "hello" + " world"
+print(x)
+```
 
-
+The value of `x` in the Python session is `r py$x`.
+It is not the same `x` as the one in R.
 

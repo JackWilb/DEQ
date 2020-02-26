@@ -1,0 +1,214 @@
+---
+title: "day3_deq"
+author: "Jack Wilburn"
+date: "2/22/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Packages for the day
+
+```{r}
+install.packages(c("ggmap", "rvest", "stringi", "dismo"))
+```
+
+# GIS data
+
+```{r}
+# https://github.com/Pakillo/R-GIS-tutorial/blob/master/R-GIS_tutorial.md#gbif
+
+point = data.frame(name = "BALD MT. BURN SCAR CAMPBELL SCIENTIFIC LOAFER CANYON",
+      description = "BALD MT. BURN SCAR CAMPBELL SCIENTIFIC LOAFER CANYON UTAH",
+      longitude = -111.65611,
+      latitude = 39.98389)
+
+library(dismo)
+
+laurus <- gbif("Laurus", "nobilis")
+str(laurus)
+nrow(laurus)
+ncol(laurus)
+13836 * 185
+locs <- subset(laurus, select = c("country", "lat", "lon"))
+library(mosaic)
+favstats(locs$lat)
+favstats(locs$lon)
+locs <- na.omit(locs)
+nrow(locs)
+
+ggplot(locs, aes(x = lon, y = lat)) + 
+  geom_point()
+
+
+library(ggplot2)
+library(dplyr)
+
+WorldData <- map_data('world') %>% filter(region != "Antarctica") %>% fortify 
+
+ggplot() +
+    geom_map(data = WorldData, map = WorldData,
+                  aes(x = long, y = lat, group = group, map_id = region),
+                  fill = "white", colour = "#7f7f7f", size = 0.5) 
+
+ggplot() +
+    geom_map(data = WorldData, map = WorldData,
+                  aes(x = long, y = lat, group = group, map_id = region),
+                  fill = "white", colour = "#7f7f7f", size = 0.5) +
+  geom_point(data = locs, aes(x = lon, y = lat))
+
+# Subset the axes here to zoom in (in class)
+
+
+# Rasters
+tmin <- getData("worldclim", var = "tmin", res = 10)
+
+tmin1 <- raster(paste(getwd(), "/wc10/tmin1.bil", sep = ""))
+
+plot(tmin1)
+
+test_spdf <- as(tmin1, "SpatialPixelsDataFrame")
+test_df <- as.data.frame(test_spdf)
+
+ggplot() +
+  geom_raster(data = test_df, aes(x = x, y = y, fill = tmin1)) # color doesn't work here
+```
+
+# Creating maps
+
+```{r}
+# library(tidyverse)
+# read_csv("https://www.nickeubank.com/wp-content/uploads/2015/10/RGIS1_Data.zip")
+
+library(ggmap)
+
+SLC <- get_stamenmap(
+  bbox = c(
+    left = -112 - 0.5, 
+    bottom = 40.5, 
+    right = -112 + 0.5, 
+    top = 40.5 + 1
+  ), 
+  zoom = 9)
+
+ggmap(SLC)
+
+WorldData <- map_data('world') %>% filter(region != "Antarctica")  %>% fortify 
+
+ggplot() +
+    geom_map(data = WorldData, map = WorldData,
+                  aes(x = long, y = lat, group = group, map_id = region),
+                  fill = "white", colour = "#7f7f7f", size = 0.5) +
+  geom_point(data = locs, aes(x = lon, y = lat)) +
+  coord_map(projection = "mercator") + 
+  scale_x_continuous(limits = c(-200, 200))
+
+
+```
+
+
+
+# Web scraping with rvest
+
+```{r}
+library(rvest)
+
+url <- 'http://www.imdb.com/search/title?count=100&release_date=2016,2016&title_type=feature'
+webpage <- read_html(url)
+
+html_text(webpage)
+
+html_nodes(webpage, "body")
+
+html_nodes(webpage, ".lister-item-header")
+
+headers <- html_nodes(webpage, ".lister-item-header")
+
+headers[1]
+headers[[1]]
+
+html_text(headers[[1]])
+
+html_text(headers[[1]][1])
+
+html_node(headers[[1]], ".text-primary") %>% html_text()
+
+html_node(headers[[1]], "a") %>% html_text()
+
+library(stringi)
+
+html_node(headers[[1]], ".text-muted") %>% html_text() %>% stri_replace_all_fixed("(", "")
+
+html_node(headers[[1]], ".text-muted") %>% html_text() %>% stri_replace_all_fixed("(", "") %>%
+  stri_replace_all_fixed(")", "")
+
+html_node(headers[[1]], ".text-muted") %>% html_text() %>% stri_replace_all_regex("[(]|[)]", "")
+
+df <- data.frame(position = numeric(), title = character(), year = numeric())
+for(header in headers) {
+  # Generate the information to add
+  position <- html_node(header, ".text-primary") %>% html_text() %>% stri_replace_all_fixed(".", "") %>% as.numeric()
+  title <- html_node(header, "a") %>% html_text() %>% as.character()
+  year <- html_node(header, ".text-muted") %>% html_text() %>% stri_replace_all_regex("[(]|[)]", "") %>% as.numeric()
+  
+  df <- rbind(df, data.frame(position, title, year))
+} # Causes an error if the date is different (e.g. number 3
+
+sum(is.na(df))
+
+html_node(headers[[3]], ".text-muted") %>% html_text() %>% stri_replace_all_regex("[(]|[)]", "")
+html_node(headers[[3]], ".text-muted") %>% html_text() %>% stri_replace_all_regex("[(]|[)]|[a-z,A-z]|[ ]", "")
+
+df_fixed <- data.frame(position = numeric(), title = character(), year = numeric(), stringsAsFactors = FALSE)
+for(header in headers) {
+  # Generate the information to add
+  position <- html_node(header, ".text-primary") %>% html_text() %>% stri_replace_all_fixed(".", "") %>% as.numeric()
+  title <- html_node(header, "a") %>% html_text() %>% as.character()
+  year <- html_node(header, ".text-muted") %>% html_text() %>%
+    stri_replace_all_regex("[(]|[)]|[a-z,A-z]|[ ]", "") %>% 
+    as.numeric()
+  
+  df_fixed <- df %>% dplyr::add_row(position, title, year)
+}
+df_fixed$title <- as.character(df_fixed$title)
+
+sum(is.na(df_fixed))
+
+rm(title, year, position)
+```
+
+
+# Interfacing with APIs using rvest
+
+```{r}
+poke_url <- "https://pokeapi.co/api/v2/pokemon/ditto"
+
+ditto <- poke_url %>% read_html() %>% html_text() %>% jsonlite::fromJSON()
+
+ditto
+
+ditto$sprites
+
+read_html(ditto$sprites$front_default)
+
+download.file(ditto$sprites$front_default, "ditto-front.png")
+ditto_png <- png::readPNG("ditto-front.png")
+plot(ditto_png)
+grid::grid.raster(ditto_png) # Has to run from console
+
+sw_url <- "https://swapi.co/api/people/1"
+
+luke_skywalker <- sw_url %>% read_html() %>% html_text() %>% jsonlite::fromJSON()
+```
+
+
+
+# Shiny - in app.R
+
+
+
+
+
+# Seasonal ARIMA

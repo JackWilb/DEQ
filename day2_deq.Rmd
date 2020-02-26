@@ -347,7 +347,7 @@ ggplot(diamonds, aes(cut, price, fill = cut)) +
   ) + 
   custom_theme
 
-``ggplot(diamonds, aes(log10(carat), log10(price))) +
+ggplot(diamonds, aes(log10(carat), log10(price))) +
   geom_point(aes(color = cut)) + 
   labs(
     title = "Diamond Price vs. Size",
@@ -364,17 +364,24 @@ ggplot(diamonds, aes(cut, price, fill = cut)) +
 
 
 # Pie Chart
-ggplot(diamonds,aes(x = "", fill=clarity)) + geom_bar(width =1) + coord_polar (theta="y")
+ggplot(diamonds,aes(x = "", fill=clarity)) + 
+  geom_bar(width =1) + 
+  coord_polar(theta="y")
 
 # Coxcomb Chart
-ggplot(diamonds,aes(x = clarity, fill=clarity)) + geom_bar(width =1) + coord_polar (theta="x")
+ggplot(diamonds,aes(x = clarity, fill=clarity)) + 
+  geom_bar(width =1) + 
+  coord_polar (theta="x")
 
 
 ```
 
 
 
-
+```{r}
+x = "hello" + " world"
+print(x)
+```
 
 
 
@@ -385,4 +392,21 @@ print(x)
 
 The value of `x` in the Python session is `r py$x`.
 It is not the same `x` as the one in R.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

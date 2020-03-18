@@ -327,8 +327,6 @@ is.nan(NA)
 
 NULL
 is.na(NULL)
-
-# Dates and times
 ```
 
 ## Subsetting

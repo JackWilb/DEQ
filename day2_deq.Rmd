@@ -64,7 +64,7 @@ news <- read_lines("datasets/news.txt") # has similar options to read_csv since 
 library(odbc)
 con <- odbc::dbConnect(drv = odbc::odbc(), driver = "ODBC Driver 17 for SQL Server", 
     server = "x.x.x.x", uid = "me", pwd = "123", 
-    database = "R4W_003")
+    database = "db_name")
 
 # Exporting data
 write_csv(iris5, "datasets/iris_short.csv")
